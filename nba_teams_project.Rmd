@@ -1,0 +1,122 @@
+---
+title: "Comparing The Texas NBA Teams"
+author: "Rima Bhakta"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+library(plotly)
+library(googleVis)
+
+op <- options(gvis.plot.tag='chart')
+
+```
+
+
+## **Background**
+
+The National Basketball Association, more popularly referred to as the NBA, is a men’s professional basketball league which consists of 30 teams. Three of which are based in Texas: the San Antonio Spurs, the Dallas Mavericks, and the Houston Rockets. Only focusing on the three Texas teams, I will compare the win-loss percentage of each team from the 2000-2019 regular seasons, compare the trends of the offensive and defensive ratings for each team, and compare the number of playoff appearances for each team. 
+
+All data collected from the source Basketball-Reference utilizes Official NBA data. Data collected from the regular seasons from 2000 to 2019 of the Spurs, the Mavericks, and the Rockets compose of a total of 57 observations. This includes the following variables: Season, Team Name, Total wins, Total losses, Win-loss percentage, Pace factor which is an estimate of possessions of 48 minutes, Offensive rating which is an estimate of points produced or scored per 100 possessions, Defensive rating which is an estimate of points allowed per 100 possessions, and Playoffs position. The data was individually web-scraped for each team and combined into one dataset.
+
+
+```{r data, echo=FALSE, include=TRUE, warning=FALSE}
+
+team_seasons<-read.csv(url("https://raw.githubusercontent.com/rbhakta7/NBA-Project/master/teams_data.csv"))
+
+SAS_team<-team_seasons
+SAS_team<-subset(SAS_team, Team == "San Antonio Spurs")
+
+DAL_team<-team_seasons
+DAL_team<-subset(DAL_team, Team == "Dallas Mavericks")
+
+HOU_team<-team_seasons
+HOU_team<-subset(HOU_team, Team == "Houston Rockets")
+
+```
+
+
+## **Results**
+
+### Win-Loss Percentages
+
+Figure #1 below (produced with plotly) displays the win-loss percentage for the San Antonio Spurs, the Dallas Mavericks, and the Houston Rockets for each season from 2000 to 2019. 
+
+For the Spurs, the highest percentage of **0.817** was in the 2015-16 season, and the lowest percentage of **0.573** was in the 2017-18 season. The graph shows consistency, with each season always remaining above a 0.60 percentage. Overall, the graph for only the San Antonio Spurs can be described as very steady, with consistent datapoints.
+
+For the Mavericks, the highest percentage of **0.817** was in the 2006-07 season, and the lowest percentage of **0.293** was in the 2017-18 season. The graph shows consistency of above a 0.60 percentage until 2011, then drops to under a 0.50 percentage for the remaining seasons. Overall, the graph for only the Dallas Mavericks can be seen as a right-tailed distribution, with the datapoints being skewed to the right.
+
+For the Rockets, the highest percentage of **0.793** was in the 2017-18 season, and the lowest percentage of **0.341** was in the 2001-02 season. The graph starts off low around a 0.50 percentage until 2006, then inclines to above a 0.50 percentage for the remaining seasons. Overall, the graph for only the Houston Rockets shows fluctuation with each season and can be seen as a left-tailed distribution, with datapoints being skewed to the left.
+
+
+```{r visuals_1, echo=FALSE, include=TRUE, warning=FALSE}
+
+team_percentages<-plot_ly(team_seasons, x=team_seasons$Season, y=team_seasons$W.L., type='bar', color=team_seasons$Team)
+team_percentages
+
+```
+
+
+### Offensive and Defensive Ratings
+
+```{r visuals_2.1, results='asis', echo=FALSE}
+
+sas_rating<-gvisLineChart(SAS_team, xvar="Season", yvar=c('ORtg', 'DRtg'), options=list(title="Offensive and Defensive Rating for Spurs"))
+plot(sas_rating)
+
+```
+
+
+Figure #2.1 above (produced with googleVis) showcases the trend of the offensive rating and defensive rating of the Spurs by every season. Offensive rating is the amount of points the team scores for every 100 possessions; whereas defensive rating is the amount of points the opposing team is allowed for every 100 possessions. As you can see, defensive rating always remains lower than offensive rating in every season; which indicates the Spurs focus more on playing defense and stop their opposing teams from shooting baskets. This is a proven fact because the players on the San Antonio Spurs are considered to be more defensive players.
+
+
+```{r visuals_2.2, results='asis', echo=FALSE}
+
+dal_rating<-gvisLineChart(DAL_team, xvar="Season", yvar=c('ORtg', 'DRtg'), options=list(title="Offensive and Defensive Rating for Mavericks"))
+plot(dal_rating)
+
+```
+
+
+Figure #2.2 above (produced with googleVis) showcases the trend of the offensive rating and defensive rating of the Mavericks by every season. Likewise, the offensive rating is the amount of points the team scores for every 100 possessions, and defensive rating is the amount of points the opposing team is allowed for every 100 possessions. Here you can see that from the seasons 2000-2014, defensive rating remains below offensive rating; which indicates the same result as the Spurs. As a team, the Dallas Mavericks focus more on playing defense which stops their opposing teams from scoring points. However, from 2015-2019, offensive rating falls below defensive rating; which means they're focusing on making more baskets in each game. This is infact true because the Mavericks have recently had players that are good shooters who can score points.
+
+
+```{r visuals_2.3, results='asis', echo=FALSE}
+
+hou_rating<-gvisLineChart(HOU_team, xvar="Season", yvar=c('ORtg', 'DRtg'), options=list(title="Offensive and Defensive Rating for Rockets"))
+plot(hou_rating)
+
+```
+
+
+Figure #2.3 above (produced with googleVis) showcases the trend of the offensive rating and defensive rating of the Rockets by every season. Once again, the offensive rating is the amount of points the team scores for every 100 possessions, and defensive rating is the amount of points the opposing team is allowed for every 100 possessions. For this graph, you can see that both ratings intersect more often than it did for the other two teams. As we know the Houston Rockets are known for being a team that showcases both offensive and defensive skills. The team consists of players that can make shots during the game, as well as guard the basket from opposing players. Similar to the Spurs, defensive rating remains below offensive rating for the majority of the seasons.
+
+
+### Playoff Appearances
+
+Lastly, Figure #3 below (produced with plotly) displays the playoffs position for each season for all three teams. The categories include: Lost Western Conference 1st Round, Lost Western Conference Semi-Finals, Lost Western Conference Finals, Lost Finals, and Won Finals. The Spurs have made a playoff appearance in every season; whereas, the Mavericks have not appeared in 4 seasons, and the Rockets have not appeared in 7 seasons. The graph shows that the Mavericks have won one championship in the 2010-11 season, and the Spurs have won 4 championships in the following seasons: 2002-03, 2004-05, 2006-07, and 2013-14. However, the Rockets have never won or lost, which indicates they never made it to the Finals in any of the 2000-2019 seasons.
+
+
+```{r visuals_3, echo=FALSE, include=TRUE, warning=FALSE}
+
+team_playoffs<-plot_ly(team_seasons, x=team_seasons$Season, y=team_seasons$Playoffs, type='bar', color=team_seasons$Team)
+team_playoffs
+
+```
+
+
+```{r resetOptions}
+
+options(op)
+
+```
+
+
+## **References**
+
+https://www.basketball-reference.com/teams/
+
+https://stats.nba.com/teams/
+
